@@ -67,19 +67,6 @@ export default function Settings({ theme, setTheme }) {
           </div>
         </Card>
 
-        <Card style={{ padding:"22px 24px" }}>
-          <span style={{ fontSize:14, fontWeight:600, color:"var(--text)", display:"block", marginBottom:14 }}>Keyboard Shortcuts</span>
-          {[["N","New task (Tasks page)"],["F","Start focus timer"],["H","Go to Dashboard"],["Esc","Close any modal"]].map(([k,v],i,arr)=>(
-            <div key={k} style={{ display:"flex", alignItems:"center", gap:12, padding:"9px 0", borderBottom:i<arr.length-1?"1px solid var(--border)":"none" }}>
-              <kbd style={{
-                fontFamily:"'JetBrains Mono'", fontSize:11, padding:"3px 8px", borderRadius:5,
-                background:"var(--surface)", border:"1px solid var(--borderLight)",
-                color:"var(--text)", boxShadow:"0 1px 3px rgba(0,0,0,.2)",
-              }}>{k}</kbd>
-              <span style={{ fontSize:13, color:"var(--textMuted)" }}>{v}</span>
-            </div>
-          ))}
-        </Card>
       </div>
     </div>
   );
