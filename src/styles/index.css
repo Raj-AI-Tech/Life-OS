@@ -1,0 +1,260 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body, #root { height: 100%; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 13px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: var(--borderLight); }
+
+::placeholder { color: var(--textDim); opacity: 1; }
+select option  { background: var(--surface); color: var(--text); }
+
+/* ── RANGE SLIDER ── */
+input[type=range] {
+  -webkit-appearance: none; appearance: none;
+  width: 100%; height: 3px; border-radius: 4px;
+  background: var(--border); outline: none; cursor: pointer;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 15px; height: 15px; border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid var(--bg);
+  box-shadow: 0 0 0 3px var(--glowAccent, rgba(0,0,0,.2));
+  cursor: pointer; transition: transform .15s, box-shadow .15s;
+}
+input[type=range]::-webkit-slider-thumb:hover {
+  transform: scale(1.25);
+  box-shadow: 0 0 0 5px var(--glowAccent, rgba(0,0,0,.2));
+}
+
+/* ── CHECKBOX ── */
+input[type=checkbox] {
+  -webkit-appearance: none; appearance: none;
+  width: 15px; height: 15px; border-radius: 4px;
+  background: var(--inputBg);
+  border: 1.5px solid var(--border);
+  cursor: pointer; position: relative;
+  flex-shrink: 0; transition: all .15s;
+}
+input[type=checkbox]:checked {
+  background: var(--accent); border-color: var(--accent);
+}
+input[type=checkbox]:checked::after {
+  content: ''; position: absolute;
+  left: 4px; top: 1px; width: 4px; height: 8px;
+  border: 1.5px solid var(--accentText);
+  border-left: none; border-top: none;
+  transform: rotate(45deg);
+}
+
+/* ── FOCUS RING ── */
+button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* ═══════════════════════════════════════════════
+    PREMIUM MESH BACKGROUND — ZeBeyond-style
+    Radial glow spots that shift per-theme
+═══════════════════════════════════════════════ */
+.app-root {
+  position: relative;
+}
+.app-root::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 70% 50% at 20% 10%, var(--meshA) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 80% 80%, var(--meshB) 0%, transparent 55%),
+    radial-gradient(ellipse 40% 35% at 60% 30%, var(--meshC) 0%, transparent 50%);
+}
+.app-root > * { position: relative; z-index: 1; }
+
+/* ═══════════════════════════════════════════════
+    SIDEBAR — mobile-first correct approach
+    On mobile: sidebar is always fixed + off-screen by default.
+    JS toggles .mob-open to slide it in.
+    On desktop: sidebar is part of flex flow (position:relative).
+═══════════════════════════════════════════════ */
+
+/* Desktop default — in-flow */
+.sidebar-shell {
+  position: relative;
+  flex-shrink: 0;
+  height: 100vh;
+  z-index: 20;
+  transition: width .25s cubic-bezier(.4,0,.2,1);
+}
+
+/* The actual aside inside sidebar-shell */
+.sidebar-inner {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: var(--sidebarBg);
+  border-right: 1px solid var(--border);
+  overflow: hidden;
+}
+
+/* Mobile overlay backdrop */
+.mob-overlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.7);
+  backdrop-filter: blur(4px);
+  z-index: 45;
+}
+
+/* Mobile sidebar drawer */
+@media (max-width: 768px) {
+  .sidebar-shell {
+    position: fixed !important;
+    top: 0; left: 0;
+    width: 240px !important;
+    height: 100vh;
+    transform: translateX(-100%);
+    transition: transform .28s cubic-bezier(.4,0,.2,1), box-shadow .28s;
+    z-index: 50;
+    box-shadow: none;
+  }
+  .sidebar-shell.mob-open {
+    transform: translateX(0);
+    box-shadow: 8px 0 40px rgba(0,0,0,.6);
+  }
+  .mob-overlay.mob-open { display: block; }
+  .mob-topbar { display: flex !important; }
+  .main-content-pad { padding-top: 54px !important; }
+}
+
+@media (min-width: 769px) {
+  .mob-overlay { display: none !important; }
+  .mob-topbar  { display: none !important; }
+}
+
+/* ── GRID HELPERS ── */
+.g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.g3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; }
+.g4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; }
+.g-auto { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr)); gap: 14px; }
+.g7 { display: grid; grid-template-columns: repeat(7,1fr); gap: 8px; }
+
+@media (max-width: 1200px) { .g4 { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 900px)  { .g3 { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 768px)  {
+  .g2,.g3,.g4 { grid-template-columns: 1fr; }
+  .g7 { grid-template-columns: repeat(4,1fr); }
+}
+@media (max-width: 480px)  {
+  .g-auto { grid-template-columns: 1fr; }
+  .g7 { grid-template-columns: repeat(2,1fr); }
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(8px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+.fade-up { animation: fadeUp .2s ease both; }
+
+@keyframes focusPulse {
+  0%,100% { box-shadow: 0 0 0 0 var(--glowAccent,rgba(0,200,100,.2)); }
+  60%      { box-shadow: 0 0 0 16px transparent; }
+}
+.focus-pulse { animation: focusPulse 2.4s ease-in-out infinite; }
+
+/* ── CARD PREMIUM LOOK ── */
+.premium-card {
+  position: relative;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  transition: border-color .2s, box-shadow .2s, background .25s;
+}
+.premium-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 60% at 50% -20%, var(--cardGlow,rgba(255,255,255,.03)) 0%, transparent 60%);
+  pointer-events: none;
+}
+.premium-card:hover {
+  border-color: var(--borderLight);
+  box-shadow: 0 4px 20px rgba(0,0,0,.3), 0 0 0 1px var(--borderLight);
+}
+
+/* ── SIDEBAR NAV ACTIVE ── */
+.nav-item-active {
+  background: var(--accentDim) !important;
+  color: var(--accent) !important;
+  border-left-color: var(--accent) !important;
+}
+
+/* ── TOPBAR GRADIENT ── */
+.mob-topbar {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 54px;
+  z-index: 40;
+  background: var(--sidebarBg);
+  border-bottom: 1px solid var(--border);
+  align-items: center;
+  padding: 0 16px;
+  gap: 12px;
+  backdrop-filter: blur(12px);
+}
+
+/* ── ACCENT BUTTON GLOW ── */
+.btn-accent-glow {
+  box-shadow: 0 0 20px var(--glowAccent, rgba(0,200,100,.2));
+}
+.btn-accent-glow:hover {
+  box-shadow: 0 0 30px var(--glowAccent, rgba(0,200,100,.35));
+}
+
+/* ── STAT CARD ACCENT LINE ── */
+.stat-accent-line {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent) 0%, transparent 100%);
+  opacity: 0.5;
+}
+
+@keyframes glowPulse {
+  0% {
+    box-shadow: 0 0 8px var(--glowAccent, rgba(0,200,100,0.3));
+  }
+  50% {
+    box-shadow: 0 0 18px var(--glowAccent, rgba(0,200,100,0.6));
+  }
+  100% {
+    box-shadow: 0 0 8px var(--glowAccent, rgba(0,200,100,0.3));
+  }
+}
+
+@keyframes slowRotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
